@@ -1,4 +1,4 @@
-import { Cliente, Tratamento, Sessao, Registro } from './types';
+import { Cliente, Tratamento, Sessao, Registro, Documento } from './types';
 
 let clientes: Cliente[] = [
   {
@@ -204,5 +204,35 @@ export function excluirRegistro(id: string): boolean {
   const idx = registros.findIndex((r) => r.id === id);
   if (idx === -1) return false;
   registros.splice(idx, 1);
+  return true;
+}
+let documentos: Documento[] = [];
+
+export function listarDocumentosPorCliente(clienteId: string): Documento[] {
+  return documentos
+    .filter((d) => d.clienteId === clienteId)
+    .sort((a, b) => b.criadoEm.localeCompare(a.criadoEm));
+}
+
+export function buscarDocumento(id: string): Documento | undefined {
+  return documentos.find((d) => d.id === id);
+}
+
+export function criarDocumento(
+  dados: Omit<Documento, 'id' | 'criadoEm'>
+): Documento {
+  const novo: Documento = {
+    ...dados,
+    id: gerarId('doc'),
+    criadoEm: new Date().toISOString(),
+  };
+  documentos.push(novo);
+  return novo;
+}
+
+export function excluirDocumento(id: string): boolean {
+  const idx = documentos.findIndex((d) => d.id === id);
+  if (idx === -1) return false;
+  documentos.splice(idx, 1);
   return true;
 }

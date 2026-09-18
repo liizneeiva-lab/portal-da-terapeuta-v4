@@ -5,8 +5,10 @@ import {
   listarTratamentosPorCliente,
   listarSessoesPorTratamento,
   contarSessoesRealizadas,
+  listarDocumentosPorCliente,
 } from '@/lib/data';
 import ProgressArc from '@/components/ProgressArc';
+import DocumentosCliente from '@/components/DocumentosCliente';
 
 function formatarData(iso: string) {
   if (!iso) return '—';
@@ -20,6 +22,7 @@ export default function PerfilClientePage({
 }) {
   const cliente = buscarCliente(params.id);
   if (!cliente) notFound();
+  const documentos = listarDocumentosPorCliente(cliente.id);
 
   const tratamentos = listarTratamentosPorCliente(cliente.id);
 
@@ -151,6 +154,11 @@ export default function PerfilClientePage({
               </p>
             </div>
           )}
+
+          <DocumentosCliente
+            clienteId={cliente.id}
+            documentosIniciais={documentos}
+          />
         </div>
       </div>
     </div>
