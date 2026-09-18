@@ -1,5 +1,11 @@
-import { Cliente, Tratamento, Sessao, Registro, Documento } from './types';
-
+import {
+  Cliente,
+  Tratamento,
+  Sessao,
+  Registro,
+  Documento,
+  ItemBiblioteca,
+} from './types';
 let clientes: Cliente[] = [
   {
     id: 'cli_1',
@@ -234,5 +240,49 @@ export function excluirDocumento(id: string): boolean {
   const idx = documentos.findIndex((d) => d.id === id);
   if (idx === -1) return false;
   documentos.splice(idx, 1);
+  return true;
+}
+let itensBiblioteca: ItemBiblioteca[] = [];
+
+export function listarItensBiblioteca(
+  tipo?: ItemBiblioteca['tipo']
+): ItemBiblioteca[] {
+  const todos = [...itensBiblioteca].sort((a, b) =>
+    a.titulo.localeCompare(b.titulo)
+  );
+  if (!tipo) return todos;
+  return todos.filter((i) => i.tipo === tipo);
+}
+
+export function buscarItemBiblioteca(id: string): ItemBiblioteca | undefined {
+  return itensBiblioteca.find((i) => i.id === id);
+}
+
+export function criarItemBiblioteca(
+  dados: Omit<ItemBiblioteca, 'id' | 'criadoEm'>
+): ItemBiblioteca {
+  const novo: ItemBiblioteca = {
+    ...dados,
+    id: gerarId('bib'),
+    criadoEm: new Date().toISOString(),
+  };
+  itensBiblioteca.push(novo);
+  return novo;
+}
+
+export function atualizarItemBiblioteca(
+  id: string,
+  dados: Partial<Omit<ItemBiblioteca, 'id' | 'criadoEm'>>
+): ItemBiblioteca | undefined {
+  const idx = itensBiblioteca.findIndex((i) => i.id === id);
+  if (idx === -1) return undefined;
+  itensBiblioteca[idx] = { ...itensBiblioteca[idx], ...dados };
+  return itensBiblioteca[idx];
+}
+
+export function excluirItemBiblioteca(id: string): boolean {
+  const idx = itensBiblioteca.findIndex((i) => i.id === id);
+  if (idx === -1) return false;
+  itensBiblioteca.splice(idx, 1);
   return true;
 }
